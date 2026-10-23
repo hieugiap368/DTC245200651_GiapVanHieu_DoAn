@@ -89,3 +89,24 @@ services:
       - "3000:3000"
     networks:
       - frontend-net
+
+  loki:
+    image: grafana/loki:2.9.2
+    container_name: loki
+    restart: always
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    networks:
+      - frontend-net
+
+  promtail:
+    image: grafana/promtail:2.9.2
+    container_name: promtail
+    restart: always
+    volumes:
+      - ./promtail/promtail-config.yml:/etc/promtail/config.yml
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: -config.file=/etc/promtail/config.yml
+    networks:
+      - frontend-net
